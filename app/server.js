@@ -14,6 +14,25 @@ app.use("/api", sensorRoutes);
 
 io.on("connection", (socket) => {
     console.log("Client connected");
+    setInterval(async () => {
+
+    try {
+
+        const result = await pool.query(
+            "SELECT * FROM moisture_data ORDER BY id DESC LIMIT 1"
+        );
+
+        if (result.rows.length > 0) {
+
+            io.emit("moisture-update", result.rows[0]);
+        }
+
+    } catch (err) {
+
+        console.error(err);
+    }
+
+}, 5000);
 });
 
 server.listen(3000, () => {

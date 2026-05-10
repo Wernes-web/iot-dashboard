@@ -1,3 +1,5 @@
+const socket = io();
+
 const ctx = document.getElementById("moistureChart");
 
 fetch("/api/moisture")
@@ -7,14 +9,47 @@ fetch("/api/moisture")
         const labels = data.map(row => row.timestamp);
         const values = data.map(row => row.moisture);
 
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
+
             type: "line",
+
             data: {
                 labels: labels,
+
                 datasets: [{
                     label: "Moisture",
-                    data: values
+                    data: values,
+                    tension: 0.3
                 }]
+            },
+
+            options: {
+                responsive: true,
+
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
+        });
+
+        socket.on("moisture-update", (data) => {
+
+            console.log("Live update:", data);
+
+            chart.data.labels.push(data.timestamp);
+            chart.data.datasets[0].data.push(data.moisture);
+
+            /*
+             Keep chart size manageable
+            */
+            if (chart.data.labels.length > 50) {
+
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+            }
+
+            chart.update();
         });
     });
