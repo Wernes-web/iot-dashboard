@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: iot-dashboard
-        image: wernes1/iot-dashboard:305ba70a336ab8266bef5bc43925f3d2d0622519
+        image: wernes1/iot-dashboard:d2c3184fdf460358f381e652683390727240bcdb
         imagePullPolicy: Always
 
         ports:
