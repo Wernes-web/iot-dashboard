@@ -1,6 +1,8 @@
 const socket = io();
 
-const ctx = document.getElementById("moistureChart");
+const ctx = document
+    .getElementById("moistureChart")
+    .getContext("2d");
 
 fetch("/api/moisture")
     .then(res => res.json())
